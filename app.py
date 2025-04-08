@@ -78,25 +78,13 @@ def contact():
     <a href="/">Back to Home</a>
     '''
 
-from flask import Flask, request, redirect, url_for
-from urllib.parse import urlparse
-
-app = Flask(__name__)
-
-ALLOWED_REDIRECTS = {
-    "http://safe_site.com",
-    "https://another_safe_site.com",
-}
-
+# Vulnerable open redirect
 @app.route('/redirect')
-def redirect_safe():
+def redirect_vulnerable():
     target_url = request.args.get('url')
-    parsed_url = urlparse(target_url)
-    if target_url and parsed_url.scheme and parsed_url.netloc and target_url in ALLOWED_REDIRECTS:
+    if target_url:
         return redirect(target_url)
-    return 'No URL provided or URL not allowed.'
-
+    return 'No URL provided.'
 
 if __name__ == '__main__':
     app.run(debug=True)
-
